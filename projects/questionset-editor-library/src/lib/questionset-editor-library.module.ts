@@ -69,7 +69,7 @@ import { AssetSegmentComponent } from './components/asset-segment/asset-segment.
     TermAndConditionComponent,
     QualityParamsModalComponent,
     AssetsBrowserComponent,
-    AssetSegmentComponent,,
+    AssetSegmentComponent,
     MatchComponent
   ],
   imports: [CommonModule, FormsModule, ReactiveFormsModule.withConfig({callSetDisabledState: 'whenDisabledForLegacyCode'}), RouterModule.forChild([]), SuiModule,
