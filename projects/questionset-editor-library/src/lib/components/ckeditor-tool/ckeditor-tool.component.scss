@@ -16,6 +16,15 @@
   font-size: 11px;
   font-weight: bold;
   margin-top: -16px;
+  position: relative;
+}
+
+.bottomImage {
+  background-color: transparent;
+  z-index: 1;
+  left: 510px;
+  font-size: 11px;
+  margin-top: -18px;
   position: relative
 }
 

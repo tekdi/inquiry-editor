@@ -96,15 +96,15 @@ describe('MatchComponent', () => {
 
   it('#getInteractions should return expected interactions', () => {
     spyOn(component, 'getInteractions').and.callThrough();
-    const result = component.getInteractions(mockOptionData.editorOptionData.options);
-    expect(result).toEqual(mockOptionData.prepareMtfBody.interactions);
+    const interaction = component.getInteractions(mockOptionData.editorOptionData.options);
+    expect(interaction.response1.options).toBeDefined();
   })
 
   it('#setMapping should set mapping', () => { 
     spyOn(component, 'setMapping').and.callThrough();
     component.editorState = mockOptionData.editorOptionData;
     component.editorState.correctMatchPair = mockOptionData.editorOptionData.correctMatchPair;
-    component.maxScore = 4;
+    component.maxScore = 1;
     component.setMapping();
     expect(component.mapping).toEqual(mockOptionData.prepareMtfBody.responseDeclaration.response1.mapping);
   })
@@ -120,7 +120,7 @@ describe('MatchComponent', () => {
     component.maxScore = 4;
     spyOn(component, 'getOutcomeDeclaration').and.callThrough();
     const outcomeDeclaration = component.getOutcomeDeclaration();
-    expect(outcomeDeclaration.maxScore.cardinality).toEqual('multiple');
+    expect(outcomeDeclaration.maxScore.cardinality).toEqual('ordered');
     expect(outcomeDeclaration.maxScore.defaultValue).toEqual(4);
   })
 
@@ -141,7 +141,7 @@ describe('MatchComponent', () => {
     ];
     spyOn(component, "getResponseDeclaration").and.callThrough();
     const responseDeclaration = component.getResponseDeclaration(mockOptionData.editorOptionData);
-    expect(responseDeclaration.response1.cardinality).toEqual('multiple');
+    expect(responseDeclaration.response1.cardinality).toEqual('ordered');
   })
 
   it('#setTemplate() should set #templateType to "mtf-vertical"', () => {

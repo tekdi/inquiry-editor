@@ -49,8 +49,7 @@ export class MatchComponent implements OnInit, OnChanges {
     let metadata: any;
     if (!_.isEmpty(editorState.options)) {
       editorState.correctMatchPair = editorState.options.map((option, index) => {
-        const correctMatchPair = {};
-        correctMatchPair[index.toString()] = index;
+        const correctMatchPair = {lhs: index, rhs: index};
         return correctMatchPair;
       });
     }
@@ -95,7 +94,7 @@ export class MatchComponent implements OnInit, OnChanges {
   getResponseDeclaration(editorState) {
     const responseDeclaration = {
       response1: {
-        cardinality: 'multiple',
+        cardinality: 'ordered',
         type: 'map',
         correctResponse: {
           value: editorState.correctMatchPair,
@@ -109,7 +108,7 @@ export class MatchComponent implements OnInit, OnChanges {
   getOutcomeDeclaration() {
     const outcomeDeclaration = {
       maxScore: {
-        cardinality: 'multiple',
+        cardinality: 'ordered',
         type: 'integer',
         defaultValue: this.maxScore
       }

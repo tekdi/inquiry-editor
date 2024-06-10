@@ -28,11 +28,11 @@
         <div class="d-flex flex-w-wrap flex-jc-space-between w-100">
           <div class="w-49">
             <lib-ckeditor-tool
-              [setCharacterLimit]="setCharacterLimit" (editorDataOutput)="option.left= $event.body; editorDataHandler($event);"
-              [editorDataInput]="option.left" class="ckeditor-tool__option mb-10"
+              [setCharacterLimit]="setCharacterLimit" (editorDataOutput)="option.left = $event.body; option.leftLength = $event.length; editorDataHandler($event);"
+              [editorDataInput]="option.left" class="ckeditor-tool__option mb-10" [imageIconPosition]="'bottom'"
               [class.mb-5]="showFormError && ([undefined, ''].includes(option.left.body) || option.left.length > setCharacterLimit)">
             </lib-ckeditor-tool>
-            <label class="ui basic red error label pt-1" *ngIf="option.left.length > setCharacterLimit">
+            <label class="ui basic red error label pt-1" *ngIf="option.leftLength > setCharacterLimit">
               {{configService.labelConfig?.lbl?.reduceSize}}
             </label>
             <label class="sb-color-error fs-0-785" *ngIf="showFormError && (option.left === undefined || option.left === '')">
@@ -42,11 +42,11 @@
           <div class="w-49">
             <lib-ckeditor-tool
               [setCharacterLimit]="setCharacterLimit"
-              (editorDataOutput)="option.right = $event.body; editorDataHandler($event);"
-              [editorDataInput]="option.right" class="ckeditor-tool__option mb-10"
+              (editorDataOutput)="option.right = $event.body; option.rightLength = $event.length; editorDataHandler($event);"
+              [editorDataInput]="option.right" class="ckeditor-tool__option mb-10" [imageIconPosition]="'bottom'"
               [class.mb-5]="showFormError && ([undefined, ''].includes(option.right.body) || option.right.length > setCharacterLimit)">
             </lib-ckeditor-tool>
-            <label class="ui basic red error label pt-1" *ngIf="option.right.length > setCharacterLimit">
+            <label class="ui basic red error label pt-1" *ngIf="option.rightLength > setCharacterLimit">
               {{configService.labelConfig?.lbl?.reduceSize}}
             </label>
             <label class="sb-color-error fs-0-785" *ngIf="showFormError && (option.right === undefined || option.right === '')">

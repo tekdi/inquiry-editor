@@ -621,8 +621,8 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   validateMatchQuestionData() {
     this.validateData('match');
-    const rightOptionValid = _.find(this.editorState.options, option => (option.right === undefined || option.right === '' || option.right.length > this.setCharacterLimit));
-    const leftOptionValid = _.find(this.editorState.options, option => (option.left === undefined || option.left === '' || option.left.length > this.setCharacterLimit));
+    const rightOptionValid = _.find(this.editorState.options, option => (option.right === undefined || option.right === '' || option.rightLength > this.setCharacterLimit));
+    const leftOptionValid = _.find(this.editorState.options, option => (option.left === undefined || option.left === '' || option.leftLength > this.setCharacterLimit));
     if (rightOptionValid || leftOptionValid || (_.isUndefined(this.editorState.correctMatchPair) && this.sourcingSettings?.enforceCorrectAnswer)) {
       this.showFormError = true;
       return; //NOSONAR
