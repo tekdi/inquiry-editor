@@ -14,12 +14,12 @@ export const mockOptionData = {
     templateId: "mtf-vertical",
     correctMatchPair: [
       {
-          "lhs": 0,
-          "rhs": 0
+          "left": 0,
+          "right": [0]
       },
       {
-          "lhs": 1,
-          "rhs": 1
+          "left": 1,
+          "right": [1]
       }
     ],
     numberOfOptions: 4,
@@ -34,27 +34,27 @@ export const mockOptionData = {
           "correctResponse": {
               "value": [
                   {
-                      "lhs": 0,
-                      "rhs": 0
+                      "left": 0,
+                      "right": [0]
                   },
                   {
-                      "lhs": 1,
-                      "rhs": 1
+                      "left": 1,
+                      "right": [1]
                   }
               ]
           },
           "mapping": [
               {
                   "value": {
-                      "lhs": 0,
-                      "rhs": 0
+                      "left": 0,
+                      "right": 0
                   },
                   "score": 0.5
               },
               {
                   "value": {
-                      "lhs": 1,
-                      "rhs": 1
+                      "left": 1,
+                      "right": 1
                   },
                   "score": 0.5
               }

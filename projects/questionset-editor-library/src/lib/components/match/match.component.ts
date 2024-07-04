@@ -49,7 +49,7 @@ export class MatchComponent implements OnInit, OnChanges {
     let metadata: any;
     if (!_.isEmpty(editorState.options)) {
       editorState.correctMatchPair = editorState.options.map((option, index) => {
-        const correctMatchPair = {lhs: index, rhs: index};
+        const correctMatchPair = {left: index, right: [index]};
         return correctMatchPair;
       });
     }
@@ -94,7 +94,7 @@ export class MatchComponent implements OnInit, OnChanges {
   getResponseDeclaration(editorState) {
     const responseDeclaration = {
       response1: {
-        cardinality: 'ordered',
+        cardinality: 'multiple',
         type: 'map',
         correctResponse: {
           value: editorState.correctMatchPair,
@@ -108,7 +108,7 @@ export class MatchComponent implements OnInit, OnChanges {
   getOutcomeDeclaration() {
     const outcomeDeclaration = {
       maxScore: {
-        cardinality: 'ordered',
+        cardinality: 'multiple',
         type: 'integer',
         defaultValue: this.maxScore
       }
@@ -123,13 +123,13 @@ export class MatchComponent implements OnInit, OnChanges {
           this.maxScore / this.editorState.correctMatchPair.length,
           2
         );
-        _.forEach(this.editorState.correctMatchPair, (value) => {
+        _.forEach(this.editorState.correctMatchPair, (pair) => {
           const optionMapping = {
-            value: value,
+            value: { left: pair.left, right: pair.right[0] },
             score: scoreForEachMatch,
           };
           this.mapping.push(optionMapping);
-        })
+        });
       } else {
         this.mapping = [];
       }

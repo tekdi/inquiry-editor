@@ -120,7 +120,7 @@ describe('MatchComponent', () => {
     component.maxScore = 4;
     spyOn(component, 'getOutcomeDeclaration').and.callThrough();
     const outcomeDeclaration = component.getOutcomeDeclaration();
-    expect(outcomeDeclaration.maxScore.cardinality).toEqual('ordered');
+    expect(outcomeDeclaration.maxScore.cardinality).toEqual('multiple');
     expect(outcomeDeclaration.maxScore.defaultValue).toEqual(4);
   })
 
@@ -141,7 +141,7 @@ describe('MatchComponent', () => {
     ];
     spyOn(component, "getResponseDeclaration").and.callThrough();
     const responseDeclaration = component.getResponseDeclaration(mockOptionData.editorOptionData);
-    expect(responseDeclaration.response1.cardinality).toEqual('ordered');
+    expect(responseDeclaration.response1.cardinality).toEqual('multiple');
   })
 
   it('#setTemplate() should set #templateType to "mtf-vertical"', () => {
