@@ -16,8 +16,8 @@ export class MatchComponent implements OnInit, OnChanges {
   @Input() isReadOnlyMode;
   @Input() maxScore;
   @Output() editorDataOutput: EventEmitter<any> = new EventEmitter<any>();
-  public setCharacterLimit = 160;
-  public templateType = 'mtf-horizontal';
+  public setCharacterLimit = 65;
+  public templateType = 'mtf-vertical';
   
   constructor(
     public telemetryService: EditorTelemetryService,
