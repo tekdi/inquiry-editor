@@ -42,7 +42,7 @@ describe('MatchComponent', () => {
     component.editorState = {};
     spyOn(component, "editorDataHandler");
     component.ngOnInit();
-    expect(component.templateType).toEqual("mtf-horizontal");
+    expect(component.templateType).toEqual("mtf-vertical");
   });
 
   it("should set #templateType when updating an existing question", () => {
