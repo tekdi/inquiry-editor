@@ -124,7 +124,7 @@ export class SequenceComponent implements OnInit {
   }
 
   setMapping() {
-    if (!_.isEmpty(this.editorState.options)) {
+    if (!_.isEmpty(this.editorState?.options)) {
       this.mapping = [];
       const scoreForEachOption = _.round((this.maxScore / this.editorState.options.length), 2);
       _.forEach(this.editorState.options, (value, key) => {
