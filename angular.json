@@ -33,7 +33,7 @@
               },
               {
                 "glob": "**/*",
-                "input": "node_modules/@project-sunbird/sunbird-quml-player/lib/assets/",
+                "input": "node_modules/@tekdi/sunbird-quml-player/lib/assets/",
                 "output": "/assets/"
               }
             ],
@@ -226,7 +226,7 @@
               },
               {
                 "glob": "**/*",
-                "input": "node_modules/@project-sunbird/sunbird-quml-player/lib/assets/",
+                "input": "node_modules/@tekdi/sunbird-quml-player/lib/assets/",
                 "output": "/assets/"
               }
             ],

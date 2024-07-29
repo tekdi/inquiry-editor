@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { Observable, of, throwError} from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { map, mergeMap } from 'rxjs/operators';
-import { QuestionCursor } from '@project-sunbird/sunbird-quml-player';
+import { QuestionCursor } from '@tekdi/sunbird-quml-player';
 import { EditorCursor } from 'questionset-editor-library';
 import * as _ from 'lodash-es';
 

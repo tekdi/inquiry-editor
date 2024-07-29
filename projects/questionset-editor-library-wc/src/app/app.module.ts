@@ -4,7 +4,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { createCustomElement } from '@angular/elements';
 import { QuestionsetEditorLibraryModule, EditorComponent, EditorCursor} from 'questionset-editor-library';
-import { QuestionCursor } from '@project-sunbird/sunbird-quml-player';
+import { QuestionCursor } from '@tekdi/sunbird-quml-player';
 import { EditorCursorImplementationService } from '../../../../src/app/editor-cursor-implementation.service';
 @NgModule({
   declarations: [
