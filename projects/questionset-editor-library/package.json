@@ -1,6 +1,6 @@
 {
-  "name": "@project-sunbird/sunbird-questionset-editor",
-  "version": "7.0.6",
+  "name": "@tekdi/sunbird-questionset-editor",
+  "version": "7.0.0",
   "dependencies": {
     "tslib": "^2.0.0"
   },
@@ -16,10 +16,10 @@
     "sunbird",
     "sunbird QuestionSet Editor"
   ],
-  "homepage": "https://github.com/Sunbird-inQuiry/editor#readme",
+  "homepage": "https://github.com/tekdi/inquiry-editor#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Sunbird-inQuiry/editor.git"
+    "url": "https://github.com/tekdi/inquiry-editor.git"
   },
   "license": "MIT",
   "private": false,
