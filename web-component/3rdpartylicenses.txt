@@ -148,13 +148,13 @@ SOFTWARE.
 
 @project-sunbird/sunbird-player-sdk-v9
 
-@project-sunbird/sunbird-questionset-editor
+@tekdi/sunbird-questionset-editor
 MIT
 
-@project-sunbird/sunbird-quml-player
+@tekdi/sunbird-quml-player
 MIT
 
-@project-sunbird/sunbird-resource-library
+@tekdi/sunbird-resource-library
 
 ally.js
 MIT
