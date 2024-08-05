@@ -2,6 +2,8 @@ import { Component, EventEmitter, Input, OnInit, Output, AfterViewInit, ViewEnca
 import * as _ from 'lodash-es';
 import { v4 as uuidv4 } from 'uuid';
 import { McqForm } from '../../interfaces/McqForm';
+import { MtfForm } from '../../interfaces/MtfForm';
+import { AsqForm } from '../../interfaces/AsqForm';
 import { ServerResponse } from '../../interfaces/serverResponse';
 import { QuestionService } from '../../services/question/question.service';
 import { PlayerService } from '../../services/player/player.service';
@@ -186,6 +188,16 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  getFormClass() {
+    const formMap = {
+      'choice': McqForm,
+      'match': MtfForm,
+      'order': AsqForm,
+    };
+
+    return formMap[this.questionInteractionType];
+  }
+
   initialize() {
     this.editorService.fetchCollectionHierarchy(this.questionSetId).subscribe((response) => {
       this.questionSetHierarchy = _.get(response, 'result.questionset');
@@ -226,31 +238,38 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
                 }
               }
 
-              if (this.questionInteractionType === 'choice') {
+              const FormClass = this.getFormClass();
+
+              if (FormClass) {
                 const responseDeclaration = this.questionMetaData.responseDeclaration;
-                this.scoreMapping = _.get(responseDeclaration, 'response1.mapping');
                 const templateId = this.questionMetaData.templateId;
                 const numberOfOptions = this.questionMetaData?.editorState?.options?.length || 0;
                 const maximumOptions = _.get(this.questionInput, 'config.maximumOptions');
-                this.editorService.optionsLength = numberOfOptions;
-                const options = _.map(this.questionMetaData?.editorState?.options, option => ({ body: option.value.body }));
                 const question = this.questionMetaData?.editorState?.question;
                 const interactions = this.questionMetaData?.interactions;
-                this.editorState = new McqForm({
-                  question, options, answer: _.get(responseDeclaration, 'response1.correctResponse.value')
-                }, { templateId, numberOfOptions,maximumOptions });
-                this.editorState.solutions = this.questionMetaData?.editorState?.solutions;
+                this.editorService.optionsLength = numberOfOptions;
+
+                let options;
+                if (this.questionInteractionType === 'choice' || this.questionInteractionType === 'order') {
+                  options = _.map(this.questionMetaData?.editorState?.options, option => ({ body: option.value.body }));
+                } else if (this.questionInteractionType === 'match') {
+                  options = _.map(this.questionMetaData?.editorState?.options?.left, (left, index) => ({
+                    left: left.value.body,
+                    right: this.questionMetaData?.editorState?.options?.right?.[index].value.body
+                  }));
+                }
+
+                this.editorState = new FormClass({
+                  question, options, answer: _.get(responseDeclaration, 'response1.correctResponse.value'),
+                  correctMatchPair: this.questionInteractionType === 'match' ? _.get(responseDeclaration, 'response1.correctResponse.value') : undefined,
+                }, { templateId, numberOfOptions, maximumOptions });
+
                 this.editorState.interactions = interactions;
-                if(this.questionMetaData?.hints) {
-                  this.editorState.hints = this.questionMetaData.hints;
-                }
-                else {
-                  this.editorState.hints = {};
-                }
-                if (_.has(this.questionMetaData, 'responseDeclaration')) {
-                  this.editorState.responseDeclaration = _.get(this.questionMetaData, 'responseDeclaration');
-                }
+                this.editorState.solutions = this.questionMetaData?.editorState?.solutions || {};
+                this.editorState.hints = this.questionMetaData?.hints || {};
+                this.editorState.responseDeclaration = _.get(this.questionMetaData, 'responseDeclaration', {});
               }
+
               if (_.has(this.questionMetaData, 'primaryCategory')) {
                 this.editorState.primaryCategory = _.get(this.questionMetaData, 'primaryCategory');
               }
@@ -312,14 +331,15 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
           }
           this.editorState = { ...editorState };
         }
-        else if (this.questionInteractionType === 'choice') {
-          this.editorState = new McqForm({ question: '', options: [] }, { numberOfOptions: _.get(this.questionInput, 'config.numberOfOptions'), maximumOptions: _.get(this.questionInput, 'config.maximumOptions') });
+        else if (_.includes(['choice', 'match', 'order'], this.questionInteractionType)) {
+          const FormClass = this.getFormClass();
+          this.editorState = new FormClass({ question: '', options: [] }, { numberOfOptions: _.get(this.questionInput, 'config.numberOfOptions'), maximumOptions: _.get(this.questionInput, 'config.maximumOptions') });
         }
-        this.showLoader = false;
         /** for observation and survey to show hint,tip,dependent question option. */
         if(!_.isUndefined(this.editorService?.editorConfig?.config?.renderTaxonomy)){
           this.subMenuConfig();
         }
+        this.showLoader = false;
       }
     }, (err: ServerResponse) => {
       const errInfo = {
@@ -572,6 +592,16 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       this.validateChoiceQuestionData();
     }
 
+    //to handle when question type is mtf
+    if (this.questionInteractionType === 'match') {
+      this.validateMatchQuestionData();
+    }
+
+    //to handle when question type is ASQ
+    if (this.questionInteractionType === 'order') {
+      this.validateOrderQuestionData();
+    }
+
     if (this.questionInteractionType === 'slider') {
       this.validateSliderQuestionData();
     }
@@ -588,17 +618,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   validateChoiceQuestionData() {
-    const data = _.get(this.treeNodeData, 'data.metadata');
-    if (_.get(this.editorState, 'interactionTypes[0]') === 'choice' &&
-      _.isEmpty(this.editorState?.responseDeclaration?.response1?.mapping) &&
-      !_.isUndefined(this.editorService?.editorConfig?.config?.renderTaxonomy) &&
-      _.get(data,'allowScoring') === 'Yes') {
-      this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.005'));
-      this.showFormError = true;
-      return;
-    } else {
-      this.showFormError = false;
-    }
+    this.validateData('choice');
     const optionValid = _.find(this.editorState.options, option =>
       (option.body === undefined || option.body === '' || option.length > this.setCharacterLimit));
     if (optionValid || (_.isUndefined(this.editorState.answer) && this.sourcingSettings?.enforceCorrectAnswer)) {
@@ -609,6 +629,30 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  validateMatchQuestionData() {
+    this.validateData('match');
+    const rightOptionValid = _.find(this.editorState.options, option => (option.right === undefined || option.right === '' || option.rightLength > this.setCharacterLimit));
+    const leftOptionValid = _.find(this.editorState.options, option => (option.left === undefined || option.left === '' || option.leftLength > this.setCharacterLimit));
+    if (rightOptionValid || leftOptionValid || (_.isUndefined(this.editorState.correctMatchPair) && this.sourcingSettings?.enforceCorrectAnswer)) {
+      this.showFormError = true;
+      return; //NOSONAR
+    } else {
+      this.showFormError = false;
+    }
+  }
+
+  validateOrderQuestionData() {
+    this.validateData('order');
+    const hasInvalidOption = _.find(this.editorState.options, option =>
+      (option.body === undefined || option.body === '' || option.length > this.setCharacterLimit));
+    if (hasInvalidOption) {
+      this.showFormError = true;
+      return;
+    } else {
+      this.showFormError = false;
+    }
+  }
+  
   validateSliderQuestionData() {
     const min = _.get(this.sliderDatas, 'validation.range.min');
     const max = _.get(this.sliderDatas, 'validation.range.max');
@@ -620,7 +664,21 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       this.showFormError = false;
     }
   }
-
+  
+  validateData(interactionType) {
+    const data = _.get(this.treeNodeData, 'data.metadata');
+    if (_.get(this.editorState, 'interactionTypes[0]') === interactionType &&
+      _.isEmpty(this.editorState?.responseDeclaration?.response1?.mapping) &&
+      !_.isUndefined(this.editorService?.editorConfig?.config?.renderTaxonomy) &&
+      _.get(data,'allowScoring') === 'Yes') {
+      this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.005'));
+      this.showFormError = true;
+      return; //NOSONAR
+    } else {
+      this.showFormError = false;
+    }
+  }
+  
   redirectToQuestionset() {
     this.showConfirmPopup = false;
     this.treeService.clearTreeCache();
@@ -782,7 +840,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   setQuestionProperties(metadata) {
-    if (this.questionInteractionType != 'choice') {
+    if (!_.includes(['choice', 'match', 'order'], this.questionInteractionType)) {
       if (!_.isUndefined(metadata.answer)) {
         const answerHtml = this.getAnswerHtml(metadata.answer);
         const finalAnswer = this.getAnswerWrapperHtml(answerHtml);
@@ -805,7 +863,25 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       })
       const finalAnswer = this.getAnswerWrapperHtml(concatenatedAnswers);
       metadata.answer = finalAnswer;
-    } else if (this.questionInteractionType != 'default' && this.questionInteractionType != 'choice') {
+    } else if (this.questionInteractionType === 'match') {
+      const { question, templateId } = this.editorState;
+      const { left, right } = this.editorState.interactions.response1.options;
+      metadata.body = this.getMtfQuestionHtmlBody(question, templateId);
+      metadata['answer'] = metadata['correctMatchPair'];
+      delete metadata['correctMatchPair'];
+      metadata.answer = this.getMtfAnswerContainerHtml(left, right);
+    } else if (this.questionInteractionType === 'order') {
+      const { question, templateId } = this.editorState;
+      metadata.body = this.getAsqQuestionHtmlBody(question, templateId);
+      const correctAnswersData = this.getInteractionValues(metadata.answer, metadata.interactions);
+      let concatenatedAnswers = '';
+      _.forEach(correctAnswersData, (answer) => {
+        const optionAnswer = this.getAnswerHtml(answer.label);
+        concatenatedAnswers = concatenatedAnswers.concat(optionAnswer);
+      })
+      const finalAnswer = this.getAnswerWrapperHtml(concatenatedAnswers);
+      metadata.answer = finalAnswer;
+    } else if (this.questionInteractionType !== 'default') {
       metadata.responseDeclaration = this.getResponseDeclaration(this.questionInteractionType);
     }
     return metadata;
@@ -842,6 +918,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       metadata.programId = _.get(this.editorService, 'editorConfig.context.programId');
       metadata.collectionId = _.get(this.editorService, 'editorConfig.context.collectionIdentifier');
       metadata.organisationId = _.get(this.editorService, 'editorConfig.context.contributionOrgId');
+      metadata.isReviewModificationAllowed = !!_.get(this.questionMetaData, 'isReviewModificationAllowed');
     }
     metadata['outcomeDeclaration'] = this.getOutcomeDeclaration(metadata);
     metadata = _.merge(metadata, _.pickBy(this.childFormData, _.identity));
@@ -897,6 +974,32 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     const optionHtml = answerHtml.replace('{answer}', optionLabel);
     return optionHtml;
   }
+  
+  getMtfAnswerContainerHtml(leftOptions, rightOptions) {
+    const matchContainerTemplate = '<div class=\'match-container\'>{leftOptions}{rightOptions}</div>';
+    const leftOptionsHtml = this.getOptionWrapperHtml(leftOptions, 'left');
+    const rightOptionsHtml = this.getOptionWrapperHtml(rightOptions, 'right');
+    const matchContainer = matchContainerTemplate
+    .replace('{leftOptions}', leftOptionsHtml)
+    .replace('{rightOptions}', rightOptionsHtml);
+    return matchContainer;
+  } 
+  
+  getOptionWrapperHtml(options, type) {
+    const wrapperTemplate = `<div class='${type}-options'>{options}</div>`;
+    let optionsHtml = '';
+    options.forEach((option) => {
+      const optionHtml = this.getMtfAnswerHtml(option.label, type);
+      optionsHtml = optionsHtml.concat(optionHtml);
+    });
+    const wrapper = wrapperTemplate.replace('{options}', optionsHtml);
+    return wrapper;
+  }
+  getMtfAnswerHtml(label, type) {
+    const answerHtml = `<div class='${type}-option'>{label}</div>`;
+    const optionHtml = answerHtml.replace('{label}', label);
+    return optionHtml;
+  }
 
   getAnswerWrapperHtml(concatenatedAnswers) {
     const answerTemplate = '<div class=\'answer-container\'>{answers}</div>';
@@ -946,15 +1049,32 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     return assetSolutionValue;
   }
 
+  generateQuestionHtmlBody(template, question, templateId) {
+    return template.replace('{templateClass}', templateId).replace('{question}', question);
+  }
+
+  getMtfQuestionHtmlBody(question, templateId) {
+    const matchTemplateConfig = {
+      matchBody: '<div class=\'question-body\' tabindex=\'-1\'><div class=\'mtf-title\' tabindex=\'0\'>{question}</div><div data-match-interaction=\'response1\' class=\'{templateClass}\'></div></div>'
+    };
+    const { matchBody } = matchTemplateConfig;
+    return this.generateQuestionHtmlBody(matchBody, question, templateId);
+  }
+
   getMcqQuestionHtmlBody(question, templateId) {
     const mcqTemplateConfig = {
-      // tslint:disable-next-line:max-line-length
       mcqBody: '<div class=\'question-body\' tabindex=\'-1\'><div class=\'mcq-title\' tabindex=\'0\'>{question}</div><div data-choice-interaction=\'response1\' class=\'{templateClass}\'></div></div>'
     };
     const { mcqBody } = mcqTemplateConfig;
-    const questionBody = mcqBody.replace('{templateClass}', templateId)
-      .replace('{question}', question);
-    return questionBody;
+    return this.generateQuestionHtmlBody(mcqBody, question, templateId);
+  }
+
+  getAsqQuestionHtmlBody(question, templateId) {
+    const mcqTemplateConfig = {
+      asqBody: '<div class=\'question-body\' tabindex=\'-1\'><div class=\'asq-title\' tabindex=\'0\'>{question}</div><div data-order-interaction=\'response1\' class=\'{templateClass}\'></div></div>'
+    };
+    const { asqBody } = mcqTemplateConfig;
+    return this.generateQuestionHtmlBody(asqBody, question, templateId);
   }
 
   getDefaultSessionContext() {
@@ -1253,7 +1373,9 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   getOutcomeDeclaration(questionMetadata) {
     let cardinality = 'single';
-    if (!_.isUndefined(questionMetadata?.responseDeclaration?.response1?.mapping) &&
+    if (questionMetadata?.metadata?.interactionTypes?.includes('order')) {
+      cardinality = 'ordered';
+  } else if (!_.isUndefined(questionMetadata?.responseDeclaration?.response1?.mapping) &&
     (questionMetadata.responseDeclaration.response1.mapping).length > 1) {
         cardinality = 'multiple';
     }
@@ -1368,7 +1490,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         const defaultEditStatus = _.find(this.initialLeafFormConfig, {code: formFieldCategory.code}).editable === true;
         formFieldCategory.default = defaultEditStatus ? '' : questionSetDefaultValue;
         this.childFormData[formFieldCategory.code] = formFieldCategory.default;
-        if (formFieldCategory.code === 'maxScore' && this.questionInteractionType === 'choice') {
+        if (formFieldCategory.code === 'maxScore' && (_.includes(['choice', 'match', 'order'], this.questionInteractionType))) {
           this.childFormData[formFieldCategory.code] = this.maxScore;
         }
       });

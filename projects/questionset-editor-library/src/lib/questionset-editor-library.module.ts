@@ -34,10 +34,12 @@ import { PlainTreeComponent } from './components/plain-tree/plain-tree.component
 import { A11yModule } from '@angular/cdk/a11y';
 import { ProgressStatusComponent } from './components/progress-status/progress-status.component';
 import {TermAndConditionComponent} from './components/term-and-condition/term-and-condition.component';
+import { MatchComponent } from './components/match/match.component';
 
 import { QualityParamsModalComponent } from './components/quality-params-modal/quality-params-modal.component';
 import { AssetsBrowserComponent } from './components/assets-browser/assets-browser.component';
 import { AssetSegmentComponent } from './components/asset-segment/asset-segment.component';
+import { SequenceComponent } from './components/sequence/sequence.component';
 @NgModule({
   declarations: [
     QuestionsetEditorLibraryComponent,
@@ -69,6 +71,8 @@ import { AssetSegmentComponent } from './components/asset-segment/asset-segment.
     QualityParamsModalComponent,
     AssetsBrowserComponent,
     AssetSegmentComponent,
+    MatchComponent,
+    SequenceComponent
   ],
   imports: [CommonModule, FormsModule, ReactiveFormsModule.withConfig({callSetDisabledState: 'whenDisabledForLegacyCode'}), RouterModule.forChild([]), SuiModule,
   CommonFormElementsModule, InfiniteScrollModule, HttpClientModule, ResourceLibraryModule, A11yModule],
