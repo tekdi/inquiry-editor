@@ -152,13 +152,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@project-sunbird/sunbird-questionset-editor
+@tekdi/sunbird-questionset-editor
 MIT
 
-@project-sunbird/sunbird-quml-player-web-component
+@tekdi/sunbird-quml-player-web-component
 MIT
 
-@project-sunbird/sunbird-resource-library
+@tekdi/sunbird-resource-library
 
 bowser
 MIT
