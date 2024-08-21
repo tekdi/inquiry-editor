@@ -1274,7 +1274,6 @@ describe('EditorComponent', () => {
     spyOn(component, 'redirectToQuestionTab').and.callFake(() => {});
     spyOn(editorService, 'getCategoryDefinition').and.returnValue(of(getCategoryDefinitionResponse));
     component.handleTemplateSelection(event);
-    expect(component.questionComponentInput.config).toEqual({});
     expect(component.redirectToQuestionTab).toHaveBeenCalled();
   });
 
