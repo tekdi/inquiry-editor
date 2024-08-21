@@ -53,6 +53,19 @@
             "Comprehension": {
                 "question": "", "answer": "", "solutions": ""
              }
+        },
+        "interactiveQuestions": {
+            "TFQ": {
+                "question": "",
+                "options": [
+                    {
+                        "body": "<p>True</p>"
+                    },
+                    {
+                        "body": "<p>False</p>"
+                    }
+                ]
+            }
         }
     }
 }

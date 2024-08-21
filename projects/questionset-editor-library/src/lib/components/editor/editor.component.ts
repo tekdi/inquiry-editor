@@ -894,8 +894,8 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       const catMetaData = _.get(selectedtemplateDetails, 'objectMetadata');
       if (_.get(this.editorConfig, 'config.renderTaxonomy') === true) {
         this.questionComponentInput.config = {maximumOptions:_.get(catMetaData, 'config.maximumOptions')};
-      } else {
-        this.questionComponentInput.config = {};
+      } else if(catMetaData?.config) {
+        this.questionComponentInput.config = catMetaData.config;
       }
       this.setEnforceCorrectAnswer(catMetaData);
       if (_.isEmpty(_.get(catMetaData, 'schema.properties.interactionTypes.items.enum'))) {

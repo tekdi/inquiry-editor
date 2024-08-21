@@ -314,6 +314,12 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         else if (this.questionInteractionType === 'choice') {
           this.editorState = new McqForm({ question: '', options: [] }, { numberOfOptions: _.get(this.questionInput, 'config.numberOfOptions'), maximumOptions: _.get(this.questionInput, 'config.maximumOptions') });
+          if (this.questionInput?.config?.isTrueFalseQuestion) {
+            const OptionsCount = this.questionInput?.config?.maximumOptions ? _.toNumber(this.questionInput.config.maximumOptions) : 2;
+            const qType = 'TFQ';
+            const defaultState = _.get(this.configService, `editorConfig.defaultStates.interactiveQuestions.${qType}`);
+            this.editorState = { question: defaultState.question, options: _.shuffle(defaultState.options)}, { numberOfOptions: OptionsCount, maximumOptions: OptionsCount };
+          }
         }
         this.showLoader = false;
         /** for observation and survey to show hint,tip,dependent question option. */

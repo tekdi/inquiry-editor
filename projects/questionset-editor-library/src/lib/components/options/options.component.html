@@ -29,13 +29,22 @@
         <label *ngIf="option.length > setCharacterLimit" class="ui basic red error label pt-1">
           {{configService.labelConfig?.lbl?.reduceSize}}</label>
       </div>
-      <div class="sb-checkbox sb-checkbox-primary pl-10 mt-0 pt-0" [class.selected]="option.selected === true" *ngIf="sourcingSettings?.enforceCorrectAnswer !== false">
+      <div class="sb-checkbox sb-checkbox-primary pl-10 mt-0 pt-0" [class.selected]="option.selected === true"
+      *ngIf="sourcingSettings?.enforceCorrectAnswer !== false && !config?.isTrueFalseQuestion">
         <input type="checkbox" id="answer_{{ i + 1 }}" name="example" value="{{ i }}"  (click)="onOptionChange($event);"
         [checked]="option.selected === true"
         libTelemetryInteract
         [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('mark_as_right_anwser','click',undefined,telemetryService.telemetryPageId,{answer:i.toString()})" />
         <label for="answer_{{ i + 1 }}" class="mr-0 fs-0-785">{{configService.labelConfig?.lbl?.correctAns}}</label>
       </div>
+
+      <div class="sb-radio-btn-checkbox sb-radio-primary pl-10 mt-0 pt-0" [class.selected]="option.selected === true"
+      *ngIf="sourcingSettings?.enforceCorrectAnswer !== false && config?.isTrueFalseQuestion">
+        <input type="radio" id="answer_{{ i + 1 }}" name="example" value="{{ i }}" (click)="onOptionChange($event)"
+        [checked]="option.selected === true" />
+        <label for="answer_{{ i + 1 }}" class="mr-0 fs-0-785">{{configService.labelConfig?.lbl?.correctAns}}</label>
+      </div>
+
       <div class="w-100" *ngIf="showSubMenu">
         <lib-question-option-sub-menu [subMenus]="subMenus[i]" (onChange)="subMenuChange($event,i)"></lib-question-option-sub-menu>
         <div *ngIf="parentMeta?.allowScoring === 'Yes'">

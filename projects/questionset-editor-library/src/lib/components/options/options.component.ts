@@ -13,6 +13,7 @@ import { v4 as uuidv4 } from 'uuid';
 })
 export class OptionsComponent implements OnInit, OnChanges {
   @Input() editorState: any;
+  @Input() config: any;
   @Input() showFormError;
   @Input() sourcingSettings;
   @Input() questionPrimaryCategory;
@@ -81,6 +82,10 @@ export class OptionsComponent implements OnInit, OnChanges {
     this.editorDataOutput.emit({ body, mediaobj: event ? event.mediaobj : undefined });
   }
 
+  get qType(): string {
+    return this.config?.isTrueFalseQuestion ? 'TFQ' : 'MCQ';
+  }
+
   prepareMcqBody(editorState) {
     let metadata: any;
     const correctAnswer = editorState.answer;
@@ -116,7 +121,7 @@ export class OptionsComponent implements OnInit, OnChanges {
       editorState: {
         options,
       },
-      qType: 'MCQ',
+      qType: this.qType,
       primaryCategory: this.questionPrimaryCategory || 'Multiple Choice Question',
     };
     this.subMenuConfig(editorState.options);
@@ -229,6 +234,9 @@ export class OptionsComponent implements OnInit, OnChanges {
   }
 
   onOptionChange(event) {
+    if (this.config?.isTrueFalseQuestion) {
+      this.selectedOptions = [];
+    }
     const optionIndex = _.parseInt(event.target.value);
       if(event.target.checked === true && !_.includes(this.selectedOptions, optionIndex)) {
         this.selectedOptions.push(optionIndex);

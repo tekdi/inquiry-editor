@@ -65,6 +65,7 @@
 
               <lib-options *ngIf="questionInteractionType === 'choice'"
                 [questionPrimaryCategory]="questionPrimaryCategory"
+                [config]="questionInput?.config"
                 [editorState]="editorState" [showFormError]="showFormError"
                 (editorDataOutput)="editorDataHandler($event)"
                 [sourcingSettings]="sourcingSettings" [mapping]="scoreMapping" [maxScore]="maxScore"
