@@ -11,6 +11,7 @@ import { EditorCursor } from "../../questionset-editor-cursor.service";
 import { TreeService } from "../../services/tree/tree.service";
 import { SuiModule } from "@project-sunbird/ng2-semantic-ui";
 import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
+
 import { TelemetryInteractDirective } from "../../directives/telemetry-interact/telemetry-interact.directive";
 import {
   collectionHierarchyMock,
@@ -108,7 +109,7 @@ describe("QuestionComponent", () => {
         QuestionService,
         ToasterService,
         PlayerService,
-        { provide: ConfigService, useValue: configStub },
+        ConfigService,
         { provide: EditorService, useValue: mockEditorService },
         { provide: Router, useClass: RouterStub },
         EditorCursor,
@@ -631,6 +632,63 @@ describe("QuestionComponent", () => {
     component.questionInteractionType = "date";
     component.initialize();
     expect(component.initialize).toHaveBeenCalled();
+  });
+
+  it("#initialize for new default question", () => {
+    component.questionSetId = 'do_12345';
+    const editorService = TestBed.inject(EditorService);
+    editorService.parentIdentifier = undefined;
+    component.questionId = undefined;
+    spyOn(editorService, "fetchCollectionHierarchy").and.returnValue(of(collectionHierarchyMock));
+    component.leafFormConfig = leafFormConfigMock;
+    spyOn(component, 'populateFormData').and.callFake(() => {});
+    spyOn(component, 'setQuestionTitle').and.callFake(() => {});
+    component.showLoader = true;
+    component.questionInteractionType = "default";
+    component.questionCategory = 'SA';
+    spyOn(component, "initialize").and.callThrough();
+    component.initialize();
+    expect(component.questionSetHierarchy).toBeDefined();
+    expect(component.editorState).toBeDefined();
+    expect(component.showLoader).toBeFalsy();
+  });
+
+  it("#initialize for new choice question", () => {
+    component.questionSetId = 'do_12345';
+    const editorService = TestBed.inject(EditorService);
+    editorService.parentIdentifier = undefined;
+    component.questionId = undefined;
+    spyOn(editorService, "fetchCollectionHierarchy").and.returnValue(of(collectionHierarchyMock));
+    component.leafFormConfig = leafFormConfigMock;
+    spyOn(component, 'populateFormData').and.callFake(() => {});
+    spyOn(component, 'setQuestionTitle').and.callFake(() => {});
+    component.showLoader = true;
+    component.questionInput.config = {isTrueFalseQuestion: true, numberOfOptions: 2, maximumOptions: 2 };
+    component.questionInteractionType = "choice";
+    spyOn(component, "initialize").and.callThrough();
+    component.initialize();
+    expect(component.questionSetHierarchy).toBeDefined();
+    expect(component.editorState).toBeDefined();
+    expect(component.showLoader).toBeFalsy();
+  });
+
+  it("#initialize for new match question", () => {
+    component.questionSetId = 'do_12345';
+    const editorService = TestBed.inject(EditorService);
+    editorService.parentIdentifier = undefined;
+    component.questionId = undefined;
+    spyOn(editorService, "fetchCollectionHierarchy").and.returnValue(of(collectionHierarchyMock));
+    component.leafFormConfig = leafFormConfigMock;
+    spyOn(component, 'populateFormData').and.callFake(() => {});
+    spyOn(component, 'setQuestionTitle').and.callFake(() => {});
+    component.showLoader = true;
+    component.questionInput.config = { maximumOptions: 2 };
+    component.questionInteractionType = "match";
+    spyOn(component, "initialize").and.callThrough();
+    component.initialize();
+    expect(component.questionSetHierarchy).toBeDefined();
+    expect(component.editorState).toBeDefined();
+    expect(component.showLoader).toBeFalsy();
   });
 
   it("#toolbarEventListener() should call toolbarEventListener for saveContent", () => {
