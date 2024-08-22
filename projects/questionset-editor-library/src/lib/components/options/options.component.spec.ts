@@ -60,6 +60,7 @@ describe('OptionsComponent', () => {
       return { data: { metadata: treeData } };
     });
     component.editorState = mockOptionData.editorOptionData;
+    component.config = { isTrueFalseQuestion: false};
 
     // fixture.detectChanges();
   });
@@ -268,6 +269,7 @@ describe('OptionsComponent', () => {
   })
 
   it('onOptionChange should set editorState.answer', () => {
+    component.config.isTrueFalseQuestion = true;
     component.selectedOptions = [];
     component.editorState.answer = undefined;
     spyOn(component, 'editorDataHandler').and.callFake(() => {});
