@@ -2,6 +2,9 @@ import { QuestionService } from "./../../services/question/question.service";
 import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { QuestionComponent } from "./question.component";
+import { McqForm } from '../../interfaces/McqForm';
+import { MtfForm } from '../../interfaces/MtfForm';
+import { AsqForm } from '../../interfaces/AsqForm';
 import { Router } from "@angular/router";
 import { PlayerService } from "../../services/player/player.service";
 import { EditorTelemetryService } from "../../services/telemetry/telemetry.service";
@@ -796,6 +799,21 @@ describe("QuestionComponent", () => {
     expect(component.leafFormConfig).toBeDefined();
   });
 
+  it('should return McqForm when questionInteractionType is "choice"', () => {
+    component.questionInteractionType = 'choice';
+    expect(component.getFormClass()).toBe(McqForm);
+  });
+
+  it('should return MtfForm when questionInteractionType is "match"', () => {
+    component.questionInteractionType = 'match';
+    expect(component.getFormClass()).toBe(MtfForm);
+  });
+
+  it('should return AsqForm when questionInteractionType is "order"', () => {
+    component.questionInteractionType = 'order';
+    expect(component.getFormClass()).toBe(AsqForm);
+  });
+
   it("#onStatusChanges() should call onStatusChanges", () => {
     spyOn(component, "onStatusChanges");
     component.onStatusChanges("");
@@ -871,6 +889,12 @@ describe("QuestionComponent", () => {
     const question = '<div class=\'question-body\' tabindex=\'-1\'><div class=\'mtf-title\' tabindex=\'0\'>{question}</div><div data-match-interaction=\'response1\' class=\'{templateClass}\'></div></div>';
     const templateId = "mtf-horizontal";
     component.getMtfQuestionHtmlBody(question, templateId);
+  });
+
+  it("call #getAsqQuestionHtmlBody() to verify questionBody", () => {
+    const question = '<div class=\'question-body\' tabindex=\'-1\'><div class=\'asq-title\' tabindex=\'0\'>{question}</div><div data-order-interaction=\'response1\' class=\'{templateClass}\'></div></div>';
+    const templateId = "asq-horizontal";
+    component.getAsqQuestionHtmlBody(question, templateId);
   });
 
   it("Unit test for #sendForReview", () => {
@@ -1618,14 +1642,34 @@ describe("QuestionComponent", () => {
     expect(component.showFormError).toBeTruthy();
   });
 
-  it("#validateQuestionData() should call validateDefaultQuestionData and questionInteractionType is default", () => {
-    component.editorState = mockData.defaultQuestionMetaData.result.question;
+  it("#validateQuestionData() should call validateChoiceQuestionData when questionInteractionType is choice", () => {
+    component.editorState = mockData.defaultQuestionMetaData.result.question.editorState;
     component.editorState.question = "<p>2+2 = ?</p>";
     component.questionInteractionType = "choice";   
     spyOn(component, 'validateQuestionData').and.callThrough();
     spyOn(component, 'validateChoiceQuestionData').and.callFake(() => {});
     component.validateQuestionData();
     expect(component.validateChoiceQuestionData).toHaveBeenCalled();
+  });
+
+  it("#validateQuestionData() should call validateMatchQuestionData when questionInteractionType is match", () => {
+    component.editorState = {}
+    component.editorState['question'] = "<p>Match the colour with the fruits</p>";
+    component.questionInteractionType = "match";
+    spyOn(component, 'validateQuestionData').and.callThrough();
+    spyOn(component, 'validateMatchQuestionData').and.callFake(() => {});
+    component.validateQuestionData();
+    expect(component.validateMatchQuestionData).toHaveBeenCalled();
+  });
+
+  it("#validateQuestionData() should call validateOrderQuestionData when questionInteractionType is order", () => {
+    component.editorState = {}
+    component.editorState['question'] = "<p>Arrange the numbers in ASC order</p>";
+    component.questionInteractionType = "order";
+    spyOn(component, 'validateQuestionData').and.callThrough();
+    spyOn(component, 'validateOrderQuestionData').and.callFake(() => {});
+    component.validateQuestionData();
+    expect(component.validateOrderQuestionData).toHaveBeenCalled();
   });
 
   it('#validateChoiceQuestionData() should validate choice question data when all options are valid and set showFormError to false', () => {
@@ -1656,6 +1700,36 @@ describe("QuestionComponent", () => {
     component.questionInteractionType = "match";
     spyOn(component, "validateMatchQuestionData").and.callThrough();
     component.validateMatchQuestionData();
+    expect(component.showFormError).toBeFalsy();
+  });
+
+  it("#validateOrderQuestionData() should validate match question data when all options have valid values and set showFormError to false", () => {
+    component.showFormError = false;
+    component.editorState = {
+      "question": "<p>arrange the nunbers</p>",
+      "options": [
+          {
+              "body": "<p>1</p>",
+              "length": 1
+          },
+          {
+              "body": "<p>2</p>",
+              "length": 1
+          },
+          {
+              "body": "<p>3</p>",
+              "length": 1
+          },
+          {
+              "body": "<p>4</p>",
+              "length": 1
+          }
+      ],
+      "templateId": "asq-vertical"
+    };
+    component.questionInteractionType = "order";
+    spyOn(component, "validateOrderQuestionData").and.callThrough();
+    component.validateOrderQuestionData();
     expect(component.showFormError).toBeFalsy();
   });
 
