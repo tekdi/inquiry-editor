@@ -31,7 +31,7 @@
     "@project-sunbird/client-services": "5.0.0",
     "@project-sunbird/common-form-elements-full": "^6.0.3",
     "@project-sunbird/sb-styles": "0.0.9",
-    "@project-sunbird/sunbird-file-upload-library": "1.0.2",
+    "@project-sunbird/sunbird-file-upload-library": "1.0.4",
     "@project-sunbird/telemetry-sdk": "0.0.29",
     "@tekdi/sunbird-quml-player": "7.0.0",
     "@tekdi/sunbird-resource-library": "7.0.0",
