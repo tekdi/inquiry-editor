@@ -4,9 +4,9 @@ export const questionSetEditorConfig = {
     contributionOrgId: '',
     user: {
       id: '15155b7a-5316-4bb2-992a-772093e85f44',
-      fullName: 'Shubham',
-      firstName: 'Shubham ',
-      lastName: '',
+      fullName: 'Test User',
+      firstName: 'Test',
+      lastName: 'User',
       orgIds: ['scp-channel']
     },
     identifier: 'do_214234702021410816111',
@@ -54,7 +54,7 @@ export const questionSetEditorConfig = {
       orgreview: ['name', 'instructions', 'learningOutcome'],
       review: ['name', 'description'],
     },
-    maxDepth: 4,
+    maxDepth: 1,
     objectType: 'QuestionSet',
     primaryCategory: 'Practice Question Set',
     isRoot: true,
@@ -111,8 +111,6 @@ export const questionSetEditorConfig = {
 };
 
 export const questionEditorConfig = {}
-
 export const observationEditorConfig = {}
 export const surveyEditorConfig = {}
-
 export const observationRubricsEditorConfig = {}
