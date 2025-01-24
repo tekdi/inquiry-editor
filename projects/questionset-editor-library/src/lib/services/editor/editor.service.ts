@@ -24,6 +24,7 @@ export class EditorService {
   public questionStream$ = new Subject<any>();
   private _editorConfig: IEditorConfig;
   private _editorMode = 'edit';
+  private _userSpecificFrameworkField: any;
   private _isReviewerEditEnable = false;
   private _isReviewModificationAllowed = false;
   public showQuestionLibraryPage: EventEmitter<any> = new EventEmitter();
@@ -51,6 +52,7 @@ export class EditorService {
       this._editorConfig.config = _.assign(this.configService.editorConfig.default, this._editorConfig.config);
     }
     this._editorMode = _.get(this._editorConfig, 'config.mode').toLowerCase();
+    this._userSpecificFrameworkField = _.get(this._editorConfig, 'config.userSpecificFrameworkField');
     this.setIsReviewerEditEnable(_.get(this._editorConfig, 'context.enableReviewEdit', false));
     this.setQualityFormConfig(_.get(this._editorConfig, 'config.qualityFormConfig', null));
     this.setIsReviewerQualityCheckEnabled(_.get(this._editorConfig, 'config.isReviewerQualityCheckEnabled', false));
@@ -78,6 +80,10 @@ export class EditorService {
 
   get editorMode() {
     return this._editorMode;
+  }
+
+  get userSpecificFrameworkField() {
+    return this._userSpecificFrameworkField;
   }
 
   get isReviewerEditEnable() {
