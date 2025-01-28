@@ -34,7 +34,7 @@
     "@project-sunbird/sunbird-file-upload-library": "1.0.4",
     "@project-sunbird/telemetry-sdk": "0.0.29",
     "@tekdi/sunbird-quml-player": "7.0.0",
-    "@tekdi/sunbird-resource-library": "7.0.0",
+    "@tekdi/sunbird-resource-library": "7.0.1",
     "@types/jquery": "^3.5.5",
     "alphanum-sort": "^1.0.2",
     "async": "^3.2.4",

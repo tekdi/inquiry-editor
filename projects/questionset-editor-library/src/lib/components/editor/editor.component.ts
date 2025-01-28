@@ -80,6 +80,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public setChildQuestion: any;
   public unsubscribe$ = new Subject<void>();
   public onComponentDestroy$ = new Subject<any>();
+  public userSpecificFrameworkField: any;
   constructor(private editorService: EditorService, public treeService: TreeService, private frameworkService: FrameworkService,
               private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router,
               private toasterService: ToasterService,
@@ -107,6 +108,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.setEditorConfig();
     this.editorService.initialize(this.editorConfig);
     this.editorMode = this.editorService.editorMode;
+    this.userSpecificFrameworkField = this.editorService.userSpecificFrameworkField;
     this.treeService.initialize(this.editorConfig);
     this.objectType = this.configService.categoryConfig[this.editorConfig.config.objectType];
     this.collectionId = _.get(this.editorConfig, 'context.identifier');
@@ -550,10 +552,11 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
           framework: this.organisationFramework,
           editorConfig: this.editorConfig,
           searchFormConfig:  this.questionlibraryInput.searchFormConfig,
-          metadataFormConfig: this.questionlibraryInput.metadataFormConfig
+          metadataFormConfig: this.questionlibraryInput.metadataFormConfig,
+          userSpecificFrameworkField: this.userSpecificFrameworkField
         };
         this.pageId = 'question_library';
-        console.log(this.questionlibraryInput);
+        console.log('questionlibraryInput ====>',this.questionlibraryInput);
       }).catch(((error: string) => {
         this.toasterService.error(error);
         this.buttonLoaders.addQuestionFromLibraryButtonLoader = false;
