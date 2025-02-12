@@ -22,6 +22,7 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
   @Input() rootFormConfig: any;
   @Input() unitFormConfig: any;
   @Input() nodeMetadata: any;
+  @Input() userSpecificFrameworkField: any;
   @Output() toolbarEmitter = new EventEmitter<any>();
   private onComponentDestroy$ = new Subject<any>();
   public frameworkDetails: any = {};
@@ -85,7 +86,21 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
         filter(data => _.get(data, `frameworkdata.${this.frameworkService.organisationFramework}`))
       ).subscribe((frameworkDetails: any) => {
         if (frameworkDetails && !frameworkDetails.err) {
-          const frameworkData = frameworkDetails.frameworkdata[this.frameworkService.organisationFramework].categories;
+          let frameworkData = frameworkDetails.frameworkdata[this.frameworkService.organisationFramework].categories;
+          // This is added to handled SCP CCTA and SCTA User for Pratham
+          if (!_.isEmpty(this.userSpecificFrameworkField?.value) && !_.isUndefined(this.userSpecificFrameworkField?.value)) {
+            let filteredFrameworks:any = [];
+            filteredFrameworks = _.cloneDeep(frameworkData);
+            filteredFrameworks.forEach(framework => {
+              if (framework.code === this.userSpecificFrameworkField.code) {
+                framework.terms = framework.terms.filter(term =>
+                  this.userSpecificFrameworkField.value.includes(term.name)
+                );
+              }
+            });
+            frameworkData = filteredFrameworks;
+          }
+          console.log("frameworkData ===>", frameworkData);
           this.frameworkDetails.frameworkData = frameworkData;
           this.frameworkDetails.topicList = _.get(_.find(frameworkData, {
             code: 'topic'
