@@ -1373,7 +1373,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   getOutcomeDeclaration(questionMetadata) {
     let cardinality = 'single';
-    if (questionMetadata?.metadata?.interactionTypes?.includes('order')) {
+    if (questionMetadata?.interactionTypes?.includes('order')) {
       cardinality = 'ordered';
   } else if (!_.isUndefined(questionMetadata?.responseDeclaration?.response1?.mapping) &&
     (questionMetadata.responseDeclaration.response1.mapping).length > 1) {
