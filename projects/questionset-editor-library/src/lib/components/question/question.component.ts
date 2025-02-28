@@ -1082,7 +1082,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       {
         creator: _.get(this.editorService.editorConfig, 'context.user.fullName'),
         createdBy: _.get(this.editorService.editorConfig, 'context.user.id'),
-        ..._.pick(_.get(this.editorService.editorConfig, 'context'), ['board', 'medium', 'gradeLevel', 'subject', 'topic'])
+        ..._.pick(_.get(this.editorService.editorConfig, 'context'), ['board', 'medium', 'gradeLevel', 'subject', 'courseType', 'domain', 'subDomain', 'stream', 'topic', 'subTopic', 'program'])
       },
       {
         ..._.pick(this.questionSetHierarchy, this.configService.sessionContext)

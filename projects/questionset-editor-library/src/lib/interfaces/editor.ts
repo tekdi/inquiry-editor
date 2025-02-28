@@ -27,7 +27,13 @@ export interface Context {
     medium?: any;
     gradeLevel?: any;
     subject?: any;
+    courseType?: any;
+    domain?: any;
+    subDomain?: any;
+    stream?: any;
     topic?: any;
+    subTopic?: any;
+    program?: any;
     framework: string;
     cloudStorageUrls?: string[];
     additionalCategories?: any[];
