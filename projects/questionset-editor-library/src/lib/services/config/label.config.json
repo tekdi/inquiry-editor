@@ -126,7 +126,7 @@
        "confirmQuestionNotSaved":"This question will not be saved, are you sure you want to go back to questionset?",
        "video":"Video",
        "audio":"Audio",
-       "textImage":"Text",
+       "textImage":"Text+Image",
        "chooseType":"Choose type",
        "solution":"Solution",
        "optional":"(Optional)",
