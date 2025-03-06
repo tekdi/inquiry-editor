@@ -5,18 +5,18 @@
       <span class="sb-required">*</span>
     </label>
     <label class="fs-0-92 d-inline-block">
-      {{configService.labelConfig?.lbl?.selectLayout}}
+      {{configService.labelConfig?.lbl?.asqQuestionAnswerText}}
     </label>
     <i class="icon info circle ml-8" suiPopup popupDelay="500"
       popupText={{configService.labelConfig?.lbl?.optionsPopupText}}></i>
-    <span class="divider mr-8"></span>
-    <span>
+    <!-- <span class="divider mr-8"></span> -->
+    <!-- <span>
       <button class="sb-btn sb-btn-xs sb-btn-outline-gray mr-5 q-sb-layout-two"
         [ngClass]="{active: 'asq-vertical' === templateType}" (click)="setTemplate('asq-vertical')">
         <i class="mr-10 h-7 w-20"></i>
         {{configService.labelConfig?.lbl?.vertical}}
       </button>
-    </span>
+    </span> -->
     <!-- <span>
       <button class="sb-btn sb-btn-xs sb-btn-outline-gray mr-5 q-sb-layout-single"
         [ngClass]="{active: 'asq-horizontal' === templateType}" (click)="setTemplate('asq-horizontal')">

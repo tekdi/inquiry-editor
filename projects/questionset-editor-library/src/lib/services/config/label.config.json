@@ -115,7 +115,7 @@
        "confirmPublishCollection":"Are you sure you want to publish this ${objectType}?",
        "fillComments":"Fill comments",
        "options":"Options",
-       "optionsPopupText":"Please Preview to check how layout looks. Layout is responsive to the resolution of your device",
+       "optionsPopupText":"Preview your question to ensure it looks perfect! For the best experience, use either text or an image for each option.",
        "selectOneAns":"Select one correct answer",
        "fillThisOption":"Fill this option",
        "reduceSize":"Please reduce the size",
@@ -159,7 +159,9 @@
        "qualityReview": "If the score is less than or equal to 15 please re-evaluate the question and send back for corrections.",
        "addPair": "Add pair",
        "setAnswers": "Set your answers",
-       "addQuestionAnswerPairText": "Add question-answer pairs to your question. Answers will be shuffled automatically"
+       "mcqQuestionAnswerPairText": "Fill in the options and select the correct option(s).",
+       "mtfQuestionAnswerPairText": "Fill in the left-side and right-side matches. The pairs will be shuffled automatically.",
+       "asqQuestionAnswerText": "Fill the options in correct order. The options will be shuffled automatically."
       },
     "err":{
        "somethingWentWrong":"Something went wrong",
