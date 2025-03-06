@@ -944,28 +944,28 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   checkMediaExists(questionMetadata, mediaId) {
-    if (_.includes(questionMetadata.body, mediaId) || _.includes(questionMetadata.answer, mediaId)) {
+    if (!questionMetadata) return false;
+
+    const { body, answer, solutions, qType, interactions } = questionMetadata;
+    if (_.includes(body, mediaId) || _.includes(answer, mediaId)) {
       return true;
     }
 
-    if (questionMetadata?.solutions) {
-      const solutionValues = _.values(questionMetadata.solutions);
-      for (const solution of solutionValues) {
-        if (_.includes(solution, mediaId)) {
-          return true;
-        }
-      }
+    if (solutions && _.some(_.values(solutions), (solution) => _.includes(solution, mediaId))) {
+      return true;
     }
 
-    if (questionMetadata?.qType !== 'SA' && questionMetadata?.interactions?.response1?.options) {
-      const interactionsOptions = questionMetadata.interactions.response1.options;
-      for (const option of interactionsOptions) {
-        if (_.includes(option?.label, mediaId)) {
-          return true;
-        }
+    if (interactions?.response1?.options) {
+      if (qType === 'MTF') {
+        return ['left', 'right'].some((side) =>
+          _.some(interactions.response1.options?.[side], (option) => _.includes(option?.label, mediaId))
+        );
+      }
+
+      if (qType !== 'SA' && qType !== 'MTF') {
+        return _.some(interactions.response1.options, (option) => _.includes(option?.label, mediaId));
       }
     }
-
     return false;
   }
 
