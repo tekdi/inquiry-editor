@@ -28,7 +28,7 @@ jobs:
         cache-dependency-path: package-lock.json
 
     - name: Install Project Dependencies
-      run: npm ci
+      run: npm install --legacy-peer-deps
 
     - name: Execute Tests
       run: npm run test-coverage

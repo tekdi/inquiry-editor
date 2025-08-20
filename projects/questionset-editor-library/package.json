@@ -1,6 +1,6 @@
 {
   "name": "@tekdi/sunbird-questionset-editor",
-  "version": "9.0.0-beta.9",
+  "version": "9.0.0-beta.10",
   "dependencies": {
     "tslib": "^2.0.0"
   },
@@ -8,7 +8,7 @@
     "@angular/common": "16.2.12",
     "@angular/core": "16.2.12",
     "@project-sunbird/ckeditor-build-classic": "4.1.3",
-    "@project-sunbird/common-form-elements-full": "8.0.1",
+    "@tekdi/common-form-elements-full": "8.0.0-beta.0",
     "@project-sunbird/ng2-semantic-ui": "8.0.2",
     "@angular/cdk": "16.2.14"
   },
