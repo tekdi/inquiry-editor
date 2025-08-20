@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
-import { CommonFormElementsModule } from '@project-sunbird/common-form-elements-full';
+import { CommonFormElementsModule } from '@tekdi/common-form-elements-full';
 import { SuiModule } from '@project-sunbird/ng2-semantic-ui';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { HttpClientModule } from '@angular/common/http';
