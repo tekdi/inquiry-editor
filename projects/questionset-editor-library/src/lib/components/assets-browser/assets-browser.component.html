@@ -103,8 +103,7 @@
 <div>
   <button (click)="dismissPops(modal);" class="mr-10 sb-btn sb-btn-primary sb-btn-normal">{{configService.labelConfig?.button_labels?.cancel_btn_label}}</button>
     <button type="button" class="sb-btn sb-btn-normal text-left sb-btn-loading-spinner sb-btn-primary"
-      (click)="uploadAndUseAsset(modal);" 
-    [ngClass]="{'sb-btn-primary': assetFormValid, 'sb-btn-disabled': !assetFormValid}">
+      (click)="uploadAndUseAsset(modal);">
       <div class="sb-loading-spinner"  *ngIf="loading" role="status" aria-hidden="true"></div>
       {{configService.labelConfig?.button_labels?.upload_use_btn_label}}
     </button>
