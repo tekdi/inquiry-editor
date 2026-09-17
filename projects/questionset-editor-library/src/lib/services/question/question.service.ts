@@ -78,12 +78,12 @@ export class QuestionService {
       data: {
         request: {
           filters: {
-            contentType: 'Asset',
+            contentType: 'Resource',
             compatibilityLevel: {
               min: 1,
               max: 2
             },
-            status: ['Live'],
+            status: ['Live', 'Failed'],
           },
           limit: 50,
         }
